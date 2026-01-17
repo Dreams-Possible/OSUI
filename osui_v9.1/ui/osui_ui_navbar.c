@@ -128,8 +128,8 @@ static lv_obj_t* navbar_ui_init()
                             //导航条
                             lv_obj_t *obj = lv_button_create(parent_obj);
                             navbar_ui.bar=obj;
-                            lv_obj_set_pos(obj, (int16_t)(lv_obj_get_width(navbar_ui.parent)/4.0), NAVBAR_REAL_POS);
-                            lv_obj_set_size(obj, (int16_t)(lv_obj_get_width(navbar_ui.parent)/2.0), (int16_t)osui_disp_dp2px(OSUI_NAVBAR_THICK_DP));
+                            lv_obj_set_pos(obj, (int16_t)(osui_dispinfo->hor/4.0), NAVBAR_REAL_POS);
+                            lv_obj_set_size(obj, (int16_t)(osui_dispinfo->hor/2.0), (int16_t)osui_disp_dp2px(OSUI_NAVBAR_THICK_DP));
                             lv_obj_set_style_transform_height(obj, 0, LV_PART_MAIN | LV_STATE_PRESSED);
                             lv_obj_set_style_transform_width(obj, 0, LV_PART_MAIN | LV_STATE_PRESSED);
                             lv_obj_set_style_shadow_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
