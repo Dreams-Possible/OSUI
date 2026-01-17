@@ -1,7 +1,6 @@
 #include"osui_sys.h"
 
-// #include <time.h>
-// typedef struct tm tm_t;
+#include<string.h>
 
 //系统时间类
 typedef struct sys_time_t

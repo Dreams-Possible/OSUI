@@ -454,7 +454,7 @@ void osui_ui_anim_exec(osui_ui_anim_t* anim)
     int16_t curr = anim_obj_get(anim);
     if(curr!=anim->tg)
     {
-        if(fabs(curr-anim->tg)==1)
+        if(abs(curr-anim->tg)==1)
         {
             anim_obj_set(anim, anim->tg);
             return;

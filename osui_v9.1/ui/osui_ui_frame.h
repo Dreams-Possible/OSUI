@@ -15,8 +15,8 @@ typedef struct osui_uiframe_t
     lv_obj_t *locker;
 } osui_uiframe_t;
 
-//UI框架初始化
-void osui_ui_frame_init();
+// //UI框架初始化
+// void osui_ui_frame_init();
 //UI框架获取
 osui_uiframe_t*osui_uiframe_get();
 //UI框架载入
