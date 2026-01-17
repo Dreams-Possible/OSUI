@@ -63,5 +63,5 @@ void osui_ui_lable_get_size(const char *text, const lv_font_t *font, uint16_t *h
     {
         *ver = size.y;
     }
-    LV_LOG_USER("label size: hor=%d,ver=%d\r\n",size.x,size.y);
+    osui_log("label size: hor=%d,ver=%d\r\n",size.x,size.y);
 }

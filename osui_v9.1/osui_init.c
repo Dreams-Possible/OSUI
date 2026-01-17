@@ -148,8 +148,8 @@ void osui_init()
 
     //系统初始化
     osui_sys_init();
-    // osui_sys_set_wifi_stat(1);
-    // osui_sys_set_bt_stat(1);
+    osui_sys_set_wifi_stat(1);
+    osui_sys_set_bt_stat(1);
     osui_sys_refresh();
 
     // osui_ui_img_init();
@@ -165,8 +165,8 @@ void osui_init()
     osui_ui_locker_set_wallpaper("C:/Users/Windows/Desktop/Desktop/LVUI/prj2/lv_port_win_codeblocks-master/osui/wp_l.bmp");
     osui_ui_desktop_set_wallpaper("C:/Users/Windows/Desktop/Desktop/LVUI/prj2/lv_port_win_codeblocks-master/osui/wp_l.bmp");
     
-    //打开WiFi蓝牙
-    osui_sys_set_wifi_stat(1);
-    osui_sys_set_bt_stat(1);
-    osui_sys_refresh();
+    // //打开WiFi蓝牙
+    // osui_sys_set_wifi_stat(1);
+    // osui_sys_set_bt_stat(1);
+    // osui_sys_refresh();
 }

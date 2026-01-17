@@ -443,7 +443,7 @@ bool osui_ui_anim_finish(osui_ui_anim_t* anim)
     {
         ret=false;
     }
-    // LV_LOG_USER("curr=%d,tg=%d",curr,anim->tg);
+    // osui_log("curr=%d,tg=%d",curr,anim->tg);
     return ret;
 }
 
@@ -470,7 +470,7 @@ void osui_ui_anim_exec(osui_ui_anim_t* anim)
         }
         int16_t set = curr+(int16_t)move;
         anim_obj_set(anim, set);
-        // LV_LOG_USER("curr=%d,set=%d,move=%f",curr,set,move);
+        // osui_log("curr=%d,set=%d,move=%f",curr,set,move);
     }
 }
 
@@ -490,6 +490,6 @@ bool osui_ui_anim_wait(osui_ui_anim_t* anim)
     {
         ret=true;
     }
-    // LV_LOG_USER("curr=%d,tg=%d",curr,anim->tg);
+    // osui_log("curr=%d,tg=%d",curr,anim->tg);
     return ret;
 }

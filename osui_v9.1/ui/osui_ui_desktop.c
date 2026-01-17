@@ -293,7 +293,7 @@ static void app_launch(lv_event_t * e)
     //更新动画目标
     osui_ui_anim_set_tg(desktop_logic.app_anim,DESKTOP_ANIM_APP_POS);
     osui_ui_anim_set_tg(desktop_logic.mask_anim,DESKTOP_ANIM_MASK_APP_OPA);
-    LV_LOG_USER("app launch");
+    osui_log("app launch");
 }
 
 //退出应用
@@ -313,7 +313,7 @@ static void app_delaunch()
 //进入桌面
 static void enter_locker(lv_event_t*e)
 {
-    LV_LOG_USER("enter locker");
+    osui_log("enter locker");
     osui_ui_locker_enter();
 }
 
@@ -335,7 +335,7 @@ static void desktop_runtime(lv_timer_t*timer)
                 {
                     //更新状态
                     desktop_logic.anim_status=DESKTOP_APP;
-                    LV_LOG_USER("enter app");
+                    osui_log("enter app");
                     // //立刻退出
                     // app_delaunch();
                 }
@@ -356,7 +356,7 @@ static void desktop_runtime(lv_timer_t*timer)
                     lv_obj_add_flag(desktop_ui.app_mask, LV_OBJ_FLAG_HIDDEN);
                     //清除当前应用
                     desktop_logic.curr_app=NULL;
-                    LV_LOG_USER("enter home");
+                    osui_log("enter home");
                 }
             break;
             default:

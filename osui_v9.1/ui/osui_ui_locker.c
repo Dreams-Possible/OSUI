@@ -248,7 +248,7 @@ static void locker_login()
     //动画参数调整
     osui_ui_anim_set_pd(locker_logic.front_anim, OSUI_LOCKER_FRONT_LOGIN_ANIM_PDC_P, OSUI_LOCKER_FRONT_LOGIN_ANIM_PDC_D);
     osui_ui_anim_set_pd(locker_logic.back_anim, OSUI_LOCKER_BACK_LOGIN_ANIM_PDC_P, OSUI_LOCKER_BACK_LOGIN_ANIM_PDC_D);
-    LV_LOG_USER("login locker");
+    osui_log("login locker");
 }
 
 //锁屏注销
@@ -263,7 +263,7 @@ static void locker_logout()
     //动画参数调整
     osui_ui_anim_set_pd(locker_logic.front_anim, OSUI_LOCKER_FRONT_LOGOUT_ANIM_PDC_P, OSUI_LOCKER_FRONT_LOGOUT_ANIM_PDC_D);
     osui_ui_anim_set_pd(locker_logic.back_anim, OSUI_LOCKER_BACK_LOGOUT_ANIM_PDC_P, OSUI_LOCKER_BACK_LOGOUT_ANIM_PDC_D);
-    LV_LOG_USER("logout locker");
+    osui_log("logout locker");
 }
 
 //锁屏运行时
@@ -303,7 +303,7 @@ static void locker_runtime(lv_timer_t*timer)
                     locker_logic.anim_status=LOCKER_ONLINE;
                     // //动画参数调整
                     // osui_ui_anim_set_pd(locker_logic.front_anim, OSUI_LOCKER_FRONT_ONLINE_ANIM_PDC_P, OSUI_LOCKER_FRONT_ONLINE_ANIM_PDC_D);
-                    LV_LOG_USER("enter locker");
+                    osui_log("enter locker");
                 }
             break;
             //注销
@@ -320,7 +320,7 @@ static void locker_runtime(lv_timer_t*timer)
                     // osui_ui_anim_set_pd(locker_logic.front_anim, OSUI_LOCKER_FRONT_LOGIN_ANIM_PDC_P, OSUI_LOCKER_FRONT_LOGIN_ANIM_PDC_D);
                     //关闭锁屏
                     locker_logic.status = false;
-                    LV_LOG_USER("exit locker");
+                    osui_log("exit locker");
                 }
             break;
             default:

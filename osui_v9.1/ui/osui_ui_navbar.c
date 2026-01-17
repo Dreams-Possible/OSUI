@@ -134,6 +134,8 @@ static lv_obj_t* navbar_ui_init()
                             lv_obj_set_style_transform_width(obj, 0, LV_PART_MAIN | LV_STATE_PRESSED);
                             lv_obj_set_style_shadow_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_obj_set_style_shadow_offset_y(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_bg_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_bg_color(navbar_ui.bar, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_PRESSED);
                         }
                     }
                 }
@@ -149,7 +151,7 @@ static void navbar_pressed(lv_event_t*e)
     //状态更新
     navbar_logic.anim_status=NAVBAR_BUSY;
     //调整导航条状态
-    // LV_LOG_USER("state=%d",lv_obj_get_state(navbar_ui.bar));
+    // osui_log("state=%d",lv_obj_get_state(navbar_ui.bar));
     // lv_state_t
     lv_obj_set_state(navbar_ui.bar, LV_STATE_PRESSED, true);
     //调整父控件位置
@@ -164,7 +166,7 @@ static void navbar_pressed(lv_event_t*e)
     //动画目标调整
     // osui_ui_anim_set_tg(navbar_logic.bar_anim, NAVBAR_OFFSET_POS+NAVBAR_REAL_POS);
     osui_ui_anim_set_tg(navbar_logic.bar_anim, NAVBAR_OFFSET_POS);
-    LV_LOG_USER("press");
+    osui_log("press");
 }
 
 //导航条被释放
@@ -183,7 +185,7 @@ static void navbar_released(lv_event_t*e)
     {
         osui_ui_desktop_delaunch();
     }
-    LV_LOG_USER("relea");
+    osui_log("relea");
 
 }
 
@@ -253,8 +255,8 @@ static void navbar_runtime(lv_timer_t*timer)
                     //调整导航条位置
                     // lv_obj_set_pos(navbar_ui.front, (int16_t)(lv_obj_get_width(navbar_ui.parent)/4.0), NAVBAR_REAL_POS); 
                     lv_obj_set_pos(navbar_ui.front, 0, NAVBAR_ORG_POS);
-                    // LV_LOG_USER("set=%d",NAVBAR_REAL_POS);
-                    // LV_LOG_USER("OVER_STAT:%d,TG=%d,CURR=%d",navbar_logic.anim_status,navbar_logic.bar_anim->tg,lv_obj_get_y(navbar_ui.front));
+                    // osui_log("set=%d",NAVBAR_REAL_POS);
+                    // osui_log("OVER_STAT:%d,TG=%d,CURR=%d",navbar_logic.anim_status,navbar_logic.bar_anim->tg,lv_obj_get_y(navbar_ui.front));
                     //动画目标调整
                     // osui_ui_anim_set_tg(navbar_logic.bar_anim, NAVBAR_REAL_POS);
                     osui_ui_anim_set_tg(navbar_logic.bar_anim, NAVBAR_ORG_POS);
@@ -269,7 +271,7 @@ static void navbar_runtime(lv_timer_t*timer)
                     {
                         navbar_logic.wait_flag=0;
                     }
-                    // LV_LOG_USER("wait over");
+                    // osui_log("wait over");
                 }
             break;
             default:

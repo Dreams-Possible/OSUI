@@ -14,9 +14,6 @@ typedef enum os_ret_t
     OS_RET_UNKNOWN//未知错误
 }os_ret_t;
 
-//日志记录
-#include<stdio.h>
-#define osui_log(fmt,...) printf("[UI_LOG][%s:%d:%s]: "fmt" \n",__FILE__,__LINE__,__func__,##__VA_ARGS__)
 
 //内存分配
 #include<stdlib.h>
@@ -25,6 +22,10 @@ typedef enum os_ret_t
 
 //LVGL支持
 #include"lvgl/lvgl.h"
+
+//日志记录
+#include<stdio.h>
+#define osui_log(fmt,...) LV_LOG_USER("[UI_LOG][%s:%d:%s]: "fmt" \n",__FILE__,__LINE__,__func__,##__VA_ARGS__)
 
 
 #endif
