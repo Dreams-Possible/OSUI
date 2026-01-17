@@ -135,7 +135,7 @@ static lv_obj_t* navbar_ui_init()
                             lv_obj_set_style_shadow_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_obj_set_style_shadow_offset_y(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_obj_set_style_bg_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-                            lv_obj_set_style_bg_color(navbar_ui.bar, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_PRESSED);
+                            lv_obj_set_style_bg_color(navbar_ui.bar, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
                         }
                     }
                 }
