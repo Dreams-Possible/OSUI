@@ -15,6 +15,10 @@
 //UI主题
 #include"osui/ui/osui_ui_theme.h"
 
+//壁纸路径
+#define OSUI_WP_L "C:/Users/Windows/Desktop/project/lv_port_win_codeblocks-master/osui/wp/wp_l.bmp"
+#define OSUI_WP_D "C:/Users/Windows/Desktop/project/lv_port_win_codeblocks-master/osui/wp/wp_d.bmp"
+
 //测试回调
 static void test_callback(lv_event_t*e)
 {
@@ -23,15 +27,15 @@ static void test_callback(lv_event_t*e)
     {
         osui_ui_theme_set_color(OSUI_THEME_DARK);
         //设置壁纸
-        osui_ui_locker_set_wallpaper("C:/Users/Windows/Desktop/Desktop/LVUI/prj2/lv_port_win_codeblocks-master/osui/wp_d.bmp");
-        osui_ui_desktop_set_wallpaper("C:/Users/Windows/Desktop/Desktop/LVUI/prj2/lv_port_win_codeblocks-master/osui/wp_d.bmp");    
+        osui_ui_locker_set_wallpaper(OSUI_WP_D);
+        osui_ui_desktop_set_wallpaper(OSUI_WP_D);    
         a=!a;
     }else
     {
         osui_ui_theme_set_color(OSUI_THEME_LIGHT);
         //设置壁纸
-        osui_ui_locker_set_wallpaper("C:/Users/Windows/Desktop/Desktop/LVUI/prj2/lv_port_win_codeblocks-master/osui/wp_l.bmp");
-        osui_ui_desktop_set_wallpaper("C:/Users/Windows/Desktop/Desktop/LVUI/prj2/lv_port_win_codeblocks-master/osui/wp_l.bmp");
+        osui_ui_locker_set_wallpaper(OSUI_WP_L);
+        osui_ui_desktop_set_wallpaper(OSUI_WP_L);
         a=!a;
     }
 }
@@ -124,13 +128,13 @@ static lv_obj_t* test3()
 void osui_init()
 {
     //显示初始化
-    osui_disp_init(320,480,0);
-    // osui_disp_init(240,320,0);
+    // osui_disp_init(320,480,0);
+    osui_disp_init(240,320,0);
     // osui_disp_init(480,720,0);
     //输入初始化
     osui_input_init();
-    //UI框架初始化
-    osui_ui_frame_init();
+    // //UI框架初始化
+    // osui_ui_frame_init();
     //UI桌面初始化
     osui_ui_desktop_init();
     //UI锁屏初始化
@@ -162,8 +166,8 @@ void osui_init()
     osui_ui_theme_init();
     
     //设置壁纸
-    osui_ui_locker_set_wallpaper("C:/Users/Windows/Desktop/Desktop/LVUI/prj2/lv_port_win_codeblocks-master/osui/wp_l.bmp");
-    osui_ui_desktop_set_wallpaper("C:/Users/Windows/Desktop/Desktop/LVUI/prj2/lv_port_win_codeblocks-master/osui/wp_l.bmp");
+    osui_ui_locker_set_wallpaper(OSUI_WP_L);
+    osui_ui_desktop_set_wallpaper(OSUI_WP_L);
     
     // //打开WiFi蓝牙
     // osui_sys_set_wifi_stat(1);
