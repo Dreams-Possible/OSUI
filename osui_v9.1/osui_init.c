@@ -133,8 +133,8 @@ void osui_init()
     // osui_disp_init(480,720,0);
     //输入初始化
     osui_input_init();
-    // //UI框架初始化
-    // osui_ui_frame_init();
+    //UI框架初始化
+    osui_ui_frame_init();
     //UI桌面初始化
     osui_ui_desktop_init();
     //UI锁屏初始化
