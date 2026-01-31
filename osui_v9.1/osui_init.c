@@ -128,8 +128,8 @@ static lv_obj_t* test3()
 void osui_init()
 {
     //显示初始化
-    // osui_disp_init(320,480,0);
-    osui_disp_init(240,320,0);
+    osui_disp_init(320,480,0);
+    // osui_disp_init(240,320,0);
     // osui_disp_init(480,720,0);
     //输入初始化
     osui_input_init();
