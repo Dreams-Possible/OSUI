@@ -23,7 +23,7 @@
 #define LOCKER_LOGOUT_TIME (800)//注销动画时间
 #define LOCKER_FRONT_ONLINE_ANIM_PDC_P (0.3)//锁屏前景在线动画PD控制器P参数
 #define LOCKER_FRONT_ONLINE_ANIM_PDC_D (0.1)//锁屏前景在线动画PD控制器D参数
-#define LOCKER_ANIM_LV_PATH_P1 (0)//锁屏动画LVGL轨迹参数1
+#define LOCKER_ANIM_LV_PATH_P1 (1024)//锁屏动画LVGL轨迹参数1
 #define LOCKER_ANIM_LV_PATH_P2 (1024)//锁屏动画LVGL轨迹参数2
 
 //锁屏UI类

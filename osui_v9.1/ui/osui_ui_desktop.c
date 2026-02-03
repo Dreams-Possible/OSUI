@@ -24,9 +24,9 @@
 #define DESKTOP_LIST_LAYOUT_HOR_RATIO (0.5)//桌面列表布局水平比例
 #define DESKTOP_LIST_LAYOUT_VER_RATIO (0.6)//桌面列表布局垂直比例
 #define DESKTOP_SAMPLE_TIME (LV_INDEV_STATE_PR*2)//桌面采样时间
-#define DESKTOP_APP_LAUNCH_TIME (800)//应用启动动画时间
-#define DESKTOP_APP_DELAUNCH_TIME (800)//应用关闭动画时间
-#define DESKTOP_APP_ANIM_LV_PATH_P1 (0)//桌面应用动画LVGL轨迹参数1
+#define DESKTOP_APP_LAUNCH_TIME (600)//应用启动动画时间
+#define DESKTOP_APP_DELAUNCH_TIME (600)//应用关闭动画时间
+#define DESKTOP_APP_ANIM_LV_PATH_P1 (1024)//桌面应用动画LVGL轨迹参数1
 #define DESKTOP_APP_ANIM_LV_PATH_P2 (1024)//桌面应用动画LVGL轨迹参数2
 #define DESKTOP_APP_LIST_ITEM_HEIGHT_DP (32)//桌面应用列表项目DP高度
 #define DESKTOP_APP_LIST_ITEM_HEIGHT ((int16_t)(osui_disp_dp2px(DESKTOP_APP_LIST_ITEM_HEIGHT_DP)))//桌面应用列表项目高度
