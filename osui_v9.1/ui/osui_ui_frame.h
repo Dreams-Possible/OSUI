@@ -4,9 +4,6 @@
 //OSUI基础
 #include"osui/core/osui_base.h"
 
-//参数定义
-#define OSUI_ANIM_TIME (200)//动画时间
-
 //UI框架类
 typedef struct osui_uiframe_t
 {

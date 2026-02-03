@@ -8,7 +8,11 @@
 #include"osui/ui/osui_ui_anim.h"
 
 //参数定义
-#define STATBAR_HEIGHT ((int16_t)(osui_disp_dp2px(OSUI_STATBAR_HEIGHT_DP)))//状态栏高度
+#define STATBAR_HEIGHT ((int16_t)(osui_disp_dp2px(STATBAR_HEIGHT_DP)))//状态栏高度
+#define STATBAR_OPA (0)//状态栏透明度
+#define STATBAR_HEIGHT_DP (24)//状态栏DP高度
+#define STATBAR_GAP_DP (6)//状态栏DP边距
+#define STATBAR_SLIDE_EXIT_RATIO (0.3)//状态栏下滑锁屏阈值比例
 
 //状态栏UI类
 typedef struct statbar_ui_t
@@ -27,6 +31,11 @@ static statbar_ui_t statbar_ui = {0};
 
 //状态栏UI初始化
 static lv_obj_t* statbar_ui_init();
+//状态栏释放回调
+void osui_ui_locker_enter();
+static void statbar_release_cb(lv_event_t*e);
+//状态栏逻辑初始化
+static void statbar_logic_init();
 //UI状态栏初始化
 lv_obj_t* osui_ui_statbar_init();
 //UI状态栏初始化清理
@@ -87,7 +96,7 @@ static lv_obj_t* statbar_ui_init()
                     lv_obj_set_style_pad_bottom(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_bg_opa(obj, OSUI_STATBAR_OPA, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_bg_opa(obj, STATBAR_OPA, LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_bg_color(obj, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
                     // lv_obj_remove_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
                 }
@@ -111,7 +120,7 @@ static lv_obj_t* statbar_ui_init()
                         lv_obj_t *parent_obj = obj;
                         {
                             //计算布局
-                            uint16_t layout_hor=(int16_t)osui_disp_px2dp(OSUI_STATBAR_GAP_DP);
+                            uint16_t layout_hor=(int16_t)osui_disp_px2dp(STATBAR_GAP_DP);
                             uint16_t layout_ver=(int16_t)((STATBAR_HEIGHT-(osui_ui_lable_get_ver(&OSUI_UI_LABLE_FONT_MIN)))/2);
                             //状态栏图标
                             lv_obj_t *obj = lv_label_create(parent_obj);
@@ -135,7 +144,7 @@ static lv_obj_t* statbar_ui_init()
                         }
                         {
                             //计算布局
-                            uint16_t layout_hor=(int16_t)(osui_dispinfo->hor-osui_disp_px2dp(OSUI_STATBAR_GAP_DP)-osui_ui_lable_get_hor("98%" LV_SYMBOL_BATTERY_FULL, &OSUI_UI_LABLE_FONT_MIN));
+                            uint16_t layout_hor=(int16_t)(osui_dispinfo->hor-osui_disp_px2dp(STATBAR_GAP_DP)-osui_ui_lable_get_hor("98%" LV_SYMBOL_BATTERY_FULL, &OSUI_UI_LABLE_FONT_MIN));
                             uint16_t layout_ver=(int16_t)((STATBAR_HEIGHT-(osui_ui_lable_get_ver(&OSUI_UI_LABLE_FONT_MIN)))/2);
                             //状态栏电量
                             lv_obj_t *obj = lv_label_create(parent_obj);
@@ -153,12 +162,29 @@ static lv_obj_t* statbar_ui_init()
     return ret;
 }
 
+//状态栏释放回调
+static void statbar_release_cb(lv_event_t*e)
+{
+    osui_log("statbar release");
+    // osui_log("osui_input_get_move_y()=%d",osui_input_get_move_y());
+    if(osui_input_get_move_y()>osui_disp_get()->ver*STATBAR_SLIDE_EXIT_RATIO)
+    {
+        osui_ui_locker_enter();
+    }
+}
+
+//状态栏逻辑初始化
+static void statbar_logic_init()
+{
+    //活动状态检查
+    lv_obj_add_event_cb(statbar_ui.front, statbar_release_cb, LV_EVENT_RELEASED, NULL);
+}
 
 //UI状态栏初始化
 lv_obj_t* osui_ui_statbar_init()
 {
     lv_obj_t* ret = statbar_ui_init();
-    // statbar_logic_init();
+    statbar_logic_init();
     return ret;
 }
 
@@ -196,7 +222,7 @@ void osui_ui_statbar_set_time(const char* time)
 void osui_ui_statbar_set_batt(const char* batt)
 {
     //计算布局
-    uint16_t layout_hor=(int16_t)(osui_disp_get()->hor-osui_disp_px2dp(OSUI_STATBAR_GAP_DP)-osui_ui_lable_get_hor(batt, &OSUI_UI_LABLE_FONT_MIN));
+    uint16_t layout_hor=(int16_t)(osui_disp_get()->hor-osui_disp_px2dp(STATBAR_GAP_DP)-osui_ui_lable_get_hor(batt, &OSUI_UI_LABLE_FONT_MIN));
     uint16_t layout_ver=(int16_t)((STATBAR_HEIGHT-(osui_ui_lable_get_ver(&OSUI_UI_LABLE_FONT_MIN)))/2);
     //设置状态栏
     lv_obj_set_pos(statbar_ui.batt, layout_hor, layout_ver);

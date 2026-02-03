@@ -8,6 +8,7 @@
 #define OSUI_UI_LABLE_FONT_MAX lv_font_montserrat_48//大字体
 #define OSUI_UI_LABLE_FONT_MID lv_font_montserrat_24//中字体
 #define OSUI_UI_LABLE_FONT_MIN lv_font_montserrat_12//小字体
+#define OSUI_UI_LABLE_FONT_CONTENT lv_font_montserrat_14//内容字体
 
 //获取标签高度
 uint16_t osui_ui_lable_get_ver(const lv_font_t *font);

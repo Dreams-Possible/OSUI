@@ -6,10 +6,18 @@
 #include"osui/ui/osui_ui_anim.h"
 
 //参数定义
-#define NAVBAR_HEIGHT ((int16_t)(osui_disp_dp2px(OSUI_NAVBAR_HEIGHT_DP)))//导航条高度
-#define NAVBAR_REAL_POS ((int16_t)((NAVBAR_HEIGHT-osui_disp_dp2px(OSUI_NAVBAR_THICK_DP))/2))//导航条相对位置
+#define NAVBAR_HEIGHT ((int16_t)(osui_disp_dp2px(NAVBAR_HEIGHT_DP)))//导航条高度
+#define NAVBAR_REAL_POS ((int16_t)((NAVBAR_HEIGHT-osui_disp_dp2px(NAVBAR_THICK_DP))/2))//导航条相对位置
 #define NAVBAR_ORG_POS (0)//导航条原始位置
 #define NAVBAR_OFFSET_POS ((int16_t)(osui_disp_get()->ver-NAVBAR_HEIGHT))//导航条偏移位置
+#define NAVBAR_OPA (0)//导航条透明度
+#define NAVBAR_SLIDE_EXIT_RATIO (0.1)//导航条上滑退出阈值比例
+#define NAVBAR_HEIGHT_DP (16)//导航条DP高度
+#define NAVBAR_THICK_DP (6)//导航条DP厚度
+#define NAVBAR_PULL_RATIO (0.25)//导航条上拉比例
+#define NAVBAR_SAMPLE_TIME (LV_INDEV_STATE_PR*2)//导航条采样时间
+#define NAVBAR_ANIM_PDC_P (0.4)//导航条动画PD控制器P参数
+#define NAVBAR_ANIM_PDC_D (0.1)//导航条动画PD控制器D参数
 
 //导航条UI类
 typedef struct navbar_ui_t
@@ -102,7 +110,7 @@ static lv_obj_t* navbar_ui_init()
                     lv_obj_set_style_pad_bottom(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_bg_opa(obj, OSUI_NAVBAR_OPA, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_bg_opa(obj, NAVBAR_OPA, LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_bg_color(obj, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
                     // lv_obj_remove_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
                 }
@@ -129,7 +137,7 @@ static lv_obj_t* navbar_ui_init()
                             lv_obj_t *obj = lv_button_create(parent_obj);
                             navbar_ui.bar=obj;
                             lv_obj_set_pos(obj, (int16_t)(osui_dispinfo->hor/4.0), NAVBAR_REAL_POS);
-                            lv_obj_set_size(obj, (int16_t)(osui_dispinfo->hor/2.0), (int16_t)osui_disp_dp2px(OSUI_NAVBAR_THICK_DP));
+                            lv_obj_set_size(obj, (int16_t)(osui_dispinfo->hor/2.0), (int16_t)osui_disp_dp2px(NAVBAR_THICK_DP));
                             lv_obj_set_style_transform_height(obj, 0, LV_PART_MAIN | LV_STATE_PRESSED);
                             lv_obj_set_style_transform_width(obj, 0, LV_PART_MAIN | LV_STATE_PRESSED);
                             lv_obj_set_style_shadow_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -181,7 +189,7 @@ static void navbar_released(lv_event_t*e)
     lv_obj_set_state(navbar_ui.bar, LV_STATE_PRESSED, false);
     // lv_obj_set_state(navbar_ui.bar, LV_STATE_DEFAULT, true);
     //桌面退出应用
-    if(-osui_input_get_move_y()>(int16_t)(OSUI_NAVBAR_SLIDE_EXIT_RATIO*osui_disp_get()->ver))
+    if(-osui_input_get_move_y()>(int16_t)(NAVBAR_SLIDE_EXIT_RATIO*osui_disp_get()->ver))
     {
         osui_ui_desktop_delaunch();
     }
@@ -193,7 +201,7 @@ static void navbar_released(lv_event_t*e)
 static void navbar_logic_init()
 {
     //创建运行时
-    lv_timer_create(navbar_runtime,OSUI_NAVBAR_SAMPLE_TIME,NULL);
+    lv_timer_create(navbar_runtime,NAVBAR_SAMPLE_TIME,NULL);
     //活动状态检查
     lv_obj_add_event_cb(navbar_ui.front, navbar_pressed, LV_EVENT_PRESSED, NULL);
     lv_obj_add_event_cb(navbar_ui.bar, navbar_pressed, LV_EVENT_PRESSED, NULL);
@@ -203,7 +211,7 @@ static void navbar_logic_init()
     navbar_logic.bar_anim = osui_ui_anim_init();
     osui_ui_anim_set_obj(navbar_logic.bar_anim, navbar_ui.front);
     osui_ui_anim_set_type(navbar_logic.bar_anim, OSUI_UI_ANIM_TYPE_Y);
-    osui_ui_anim_set_pd(navbar_logic.bar_anim, OSUI_NAVBAR_ANIM_PDC_P, OSUI_NAVBAR_ANIM_PDC_D);
+    osui_ui_anim_set_pd(navbar_logic.bar_anim, NAVBAR_ANIM_PDC_P, NAVBAR_ANIM_PDC_D);
     // osui_ui_anim_set_tg(navbar_logic.bar_anim,NAVBAR_REAL_POS);
     osui_ui_anim_set_tg(navbar_logic.bar_anim,NAVBAR_ORG_POS);
 }
@@ -236,8 +244,8 @@ static void navbar_runtime(lv_timer_t*timer)
             //正忙
             case NAVBAR_BUSY:
                 //动画目标调整
-                // osui_ui_anim_set_tg(navbar_logic.bar_anim, NAVBAR_OFFSET_POS+NAVBAR_REAL_POS+(int16_t)(osui_input_get_move_y()*OSUI_NAVBAR_PULL_RATIO));
-                osui_ui_anim_set_tg(navbar_logic.bar_anim, NAVBAR_OFFSET_POS+(int16_t)(osui_input_get_move_y()*OSUI_NAVBAR_PULL_RATIO));
+                // osui_ui_anim_set_tg(navbar_logic.bar_anim, NAVBAR_OFFSET_POS+NAVBAR_REAL_POS+(int16_t)(osui_input_get_move_y()*NAVBAR_PULL_RATIO));
+                osui_ui_anim_set_tg(navbar_logic.bar_anim, NAVBAR_OFFSET_POS+(int16_t)(osui_input_get_move_y()*NAVBAR_PULL_RATIO));
             break;
             //等待
             case NAVBAR_WAIT:
@@ -261,7 +269,7 @@ static void navbar_runtime(lv_timer_t*timer)
                     // osui_ui_anim_set_tg(navbar_logic.bar_anim, NAVBAR_REAL_POS);
                     osui_ui_anim_set_tg(navbar_logic.bar_anim, NAVBAR_ORG_POS);
                     //动画等待
-                    if(!osui_ui_anim_wait(navbar_logic.bar_anim))
+                    if(!osui_ui_anim_finish(navbar_logic.bar_anim))
                     {
                         //取消状态更新
                         navbar_logic.anim_status=NAVBAR_WAIT;

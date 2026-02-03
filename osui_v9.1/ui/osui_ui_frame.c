@@ -1,5 +1,8 @@
 #include"osui_ui_frame.h"
 
+//参数定义
+#define FRAME_ANIM_TIME (200)//框架动画时间
+
 //UI框架
 static osui_uiframe_t osui_uiframe;
 
@@ -31,5 +34,5 @@ osui_uiframe_t*osui_uiframe_get()
 void osui_ui_frame_load()
 {
     osui_uiframe_t*osui_uiframe=osui_uiframe_get();
-    lv_screen_load_anim(osui_uiframe->desktop, LV_SCR_LOAD_ANIM_FADE_IN, OSUI_ANIM_TIME, 0, false);
+    lv_screen_load_anim(osui_uiframe->desktop, LV_SCR_LOAD_ANIM_FADE_IN, FRAME_ANIM_TIME, 0, false);
 }

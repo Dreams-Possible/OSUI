@@ -146,9 +146,9 @@ void osui_init()
     osui_ui_locker_enter();
 
     //添加应用
-    osui_ui_desktop_add_app(LV_SYMBOL_WARNING, "Test1", test1());
-    osui_ui_desktop_add_app(LV_SYMBOL_SETTINGS, "Test2", test2());
-    osui_ui_desktop_add_app(LV_SYMBOL_BELL, "Test3", test3());
+    osui_ui_desktop_add_app(LV_SYMBOL_WARNING "  " "Test1", test1());
+    osui_ui_desktop_add_app(LV_SYMBOL_SETTINGS "  " "Test2", test2());
+    osui_ui_desktop_add_app(LV_SYMBOL_BELL "  " "Test3", test3());
 
     //系统初始化
     osui_sys_init();

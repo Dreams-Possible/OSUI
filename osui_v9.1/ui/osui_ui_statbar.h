@@ -8,15 +8,6 @@
 //OSUI输入
 #include"osui/input/osui_input.h"
 
-// //参数定义
-#define OSUI_STATBAR_OPA (0)//状态栏透明度
-#define OSUI_STATBAR_HEIGHT_DP (24)//状态栏DP高度
-#define OSUI_STATBAR_GAP_DP (6)//状态栏DP边距
-// #define OSUI_STATBAR_PULL_RATIO (0.25)//状态栏上拉比例
-// #define OSUI_STATBAR_SAMPLE_TIME (LV_INDEV_STATE_PR*2)//状态栏采样时间
-// #define OSUI_STATBAR_ANIM_PDC_P (0.4)//状态栏动画PD控制器P参数
-// #define OSUI_STATBAR_ANIM_PDC_D (0.1)//状态栏动画PD控制器D参数
-
 //UI状态栏初始化
 lv_obj_t* osui_ui_navbar_init();
 //UI状态栏初始化清理

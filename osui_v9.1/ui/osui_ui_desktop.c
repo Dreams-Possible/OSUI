@@ -13,11 +13,23 @@
 #define DESKTOP_HOME_POS (osui_disp_get()->ver)//桌面位置
 // #define DESKTOP_ANIM_APP_POS (osui_ui_statbar_get_height())//应用位置
 #define DESKTOP_STATBAR_HEIGHT (osui_ui_statbar_get_height())//桌面状态栏高度
+#define DESKTOP_ANIM_HOME_POS DESKTOP_HOME_POS//桌面动画桌面位置
 #define DESKTOP_ANIM_APP_POS (0)//桌面动画应用位置
 #define DESKTOP_ANIM_MASK_HOME_OPA (0)//桌面动画遮罩桌面透明度
 #define DESKTOP_ANIM_MASK_APP_OPA (64)//桌面动画遮罩应用透明度
 #define DESKTOP_APP_BG_OPA (0)//桌面应用背景透明度
 #define DESKTOP_APP_OPA (64)//桌面应用透明度
+#define DESKTOP_INFO_LAYOUT_LEFT_RATIO (0.1)//桌面信息布局左间距比例
+#define DESKTOP_INFO_LAYOUT_TOP_RATIO (0.1)//桌面信息布局顶间距比例
+#define DESKTOP_LIST_LAYOUT_HOR_RATIO (0.5)//桌面列表布局水平比例
+#define DESKTOP_LIST_LAYOUT_VER_RATIO (0.6)//桌面列表布局垂直比例
+#define DESKTOP_SAMPLE_TIME (LV_INDEV_STATE_PR*2)//桌面采样时间
+#define DESKTOP_APP_LAUNCH_TIME (800)//应用启动动画时间
+#define DESKTOP_APP_DELAUNCH_TIME (800)//应用关闭动画时间
+#define DESKTOP_APP_ANIM_LV_PATH_P1 (0)//桌面应用动画LVGL轨迹参数1
+#define DESKTOP_APP_ANIM_LV_PATH_P2 (1024)//桌面应用动画LVGL轨迹参数2
+#define DESKTOP_APP_LIST_ITEM_HEIGHT_DP (32)//桌面应用列表项目DP高度
+#define DESKTOP_APP_LIST_ITEM_HEIGHT ((int16_t)(osui_disp_dp2px(DESKTOP_APP_LIST_ITEM_HEIGHT_DP)))//桌面应用列表项目高度
 
 //桌面UI类
 typedef struct desktop_ui_t
@@ -47,8 +59,10 @@ typedef enum desktop_anim_status_t
 typedef struct desktop_logic_t
 {
     lv_obj_t* curr_app;
-    osui_ui_anim_t* app_anim;
-    osui_ui_anim_t* mask_anim;
+    // osui_ui_anim_t* app_anim;
+    osui_ui_anim_lv_t* app_anim;
+    // osui_ui_anim_t* mask_anim;
+    osui_ui_anim_lv_t* mask_anim;
     desktop_anim_status_t anim_status;
 } desktop_logic_t;
 static desktop_logic_t desktop_logic = {0};
@@ -60,24 +74,28 @@ lv_obj_t*osui_ui_statbar_init();
 void osui_ui_statbar_init_clean();
 static void desktop_ui_init();
 //添加应用
-static void add_app(const void *icon, const char *name, lv_obj_t*app);
-//启动应用
-uint16_t osui_ui_statbar_get_height();
-static void app_launch(lv_event_t * e);
-//退出应用
-static void app_delaunch();
-//进入桌面
+static void add_app( const char *name, lv_obj_t*app);
+//进入锁屏
 void osui_ui_locker_enter();
 static void enter_locker(lv_event_t*e);
 //桌面运行时
 bool osui_ui_locker_get_status();
 static void desktop_runtime(lv_timer_t*timer);
+//启动应用
+uint16_t osui_ui_statbar_get_height();
+static void app_launch(lv_event_t * e);
+//退出应用
+static void app_delaunch();
+//应用打开回调
+static void app_launch_cb();
+//应用退出回调
+static void app_delaunch_cb();
 //桌面逻辑初始化
 static void desktop_logic_init();
 //UI桌面初始化
 void osui_ui_desktop_init();
 //桌面添加应用
-void osui_ui_desktop_add_app(const void *icon, const char *name, lv_obj_t*app);
+void osui_ui_desktop_add_app(const char *name, lv_obj_t*app);
 // //桌面启动应用
 // void osui_ui_desktop_launch(lv_obj_t*app);
 //桌面退出应用
@@ -151,8 +169,8 @@ static void desktop_ui_init()
         {
             lv_obj_t *parent_obj = obj;
             //计算布局
-            uint16_t layout_hor=(uint16_t)(osui_dispinfo->hor*OSUI_DESKTOP_INFO_LAYOUT_LEFT_RATIO);
-            uint16_t layout_ver=(uint16_t)((osui_dispinfo->ver-DESKTOP_STATBAR_HEIGHT)*OSUI_DESKTOP_INFO_LAYOUT_TOP_RATIO);
+            uint16_t layout_hor=(uint16_t)(osui_dispinfo->hor*DESKTOP_INFO_LAYOUT_LEFT_RATIO);
+            uint16_t layout_ver=(uint16_t)((osui_dispinfo->ver-DESKTOP_STATBAR_HEIGHT)*DESKTOP_INFO_LAYOUT_TOP_RATIO);
             {
                 //桌面时间
                 lv_obj_t *obj = lv_label_create(parent_obj);
@@ -178,15 +196,17 @@ static void desktop_ui_init()
             {
                 //更新布局
                 layout_ver+=osui_ui_lable_get_ver(&OSUI_UI_LABLE_FONT_MIN);
-                //列表
+                //桌面应用列表
                 lv_obj_t * obj = lv_list_create(parent_obj);
                 desktop_ui.app_list = obj;
                 lv_obj_set_pos(obj, layout_hor, layout_ver);
-                lv_obj_set_size(obj, (int16_t)(osui_dispinfo->hor*OSUI_DESKTOP_LIST_LAYOUT_HOR_RATIO), (int16_t)(osui_dispinfo->ver*OSUI_DESKTOP_LIST_LAYOUT_VER_RATIO));
+                // lv_obj_set_size(obj, (int16_t)(osui_dispinfo->hor*DESKTOP_LIST_LAYOUT_HOR_RATIO), (int16_t)(osui_dispinfo->ver*DESKTOP_LIST_LAYOUT_VER_RATIO));
+                lv_obj_set_size(obj, (int16_t)(osui_dispinfo->hor*DESKTOP_LIST_LAYOUT_HOR_RATIO), 0);
                 lv_obj_set_style_bg_opa(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
                 lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
                 // lv_obj_set_style_border_width(obj, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
                 lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_obj_remove_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
             }
         }
     }
@@ -239,15 +259,39 @@ static void desktop_ui_init()
 }
 
 //添加应用
-static void add_app(const void *icon, const char *name, lv_obj_t*app)
+static void add_app( const char *name, lv_obj_t*app)
 {
     //创建图标
-    lv_obj_t * btn = lv_list_add_button(desktop_ui.app_list, icon, name);
-    lv_obj_set_style_bg_opa(btn, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_t * btn = lv_list_add_button(desktop_ui.app_list, icon, name);
+    lv_obj_t * btn = lv_button_create(desktop_ui.app_list);
+    lv_obj_set_size(btn, (int16_t)(osui_disp_get()->hor*DESKTOP_LIST_LAYOUT_HOR_RATIO), DESKTOP_APP_LIST_ITEM_HEIGHT);
+    lv_obj_set_style_transform_height(btn, 0, LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_transform_width(btn, 0, LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_shadow_width(btn, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_offset_y(btn, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_radius(btn, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_width(btn, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_color(btn, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_bg_opa(btn, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(btn, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(btn, 128, LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_bg_color(btn, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_PRESSED);
     lv_obj_add_event_cb(btn, app_launch, LV_EVENT_CLICKED, NULL);
+    lv_obj_t * label = lv_label_create(btn);
+    lv_obj_set_style_text_font(label, &OSUI_UI_LABLE_FONT_CONTENT, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_label_set_text_fmt(label, name);
+    //调整布局
+    uint16_t curr_ver=lv_obj_get_child_count(desktop_ui.app_list)*DESKTOP_APP_LIST_ITEM_HEIGHT;
+    // osui_log("count:%d",lv_obj_get_child_count(desktop_ui.app_list));
+    // osui_log("height:%d",lv_obj_get_height(btn));
+    // osui_log("curr_ver:%d",curr_ver);
+    uint16_t max_ver=(int16_t)(osui_disp_get()->ver*DESKTOP_LIST_LAYOUT_VER_RATIO);
+    if(curr_ver<max_ver)
+    {
+        lv_obj_set_height(desktop_ui.app_list, curr_ver);
+    }else
+    {
+        lv_obj_set_height(desktop_ui.app_list, max_ver);
+    }
     //新建界面
     lv_obj_t *obj = lv_obj_create(desktop_ui.app_scr);
     lv_obj_set_pos(obj, 0, 0);
@@ -278,39 +322,7 @@ static void add_app(const void *icon, const char *name, lv_obj_t*app)
     lv_obj_set_user_data(btn,obj);
 }
 
-//启动应用
-static void app_launch(lv_event_t * e)
-{
-    //更新状态
-    desktop_logic.anim_status=DESKTOP_LAUNCH;
-    lv_obj_t * obj = lv_event_get_target(e);
-    //添加当前应用
-    desktop_logic.curr_app=lv_obj_get_user_data(obj);
-    //显示应用
-    lv_obj_remove_flag(desktop_logic.curr_app,LV_OBJ_FLAG_HIDDEN);
-    //显示遮罩
-    lv_obj_remove_flag(desktop_ui.app_mask, LV_OBJ_FLAG_HIDDEN);
-    //更新动画目标
-    osui_ui_anim_set_tg(desktop_logic.app_anim,DESKTOP_ANIM_APP_POS);
-    osui_ui_anim_set_tg(desktop_logic.mask_anim,DESKTOP_ANIM_MASK_APP_OPA);
-    osui_log("app launch");
-}
-
-//退出应用
-static void app_delaunch()
-{
-    //检查状态
-    if(desktop_logic.curr_app)
-    {
-        //更新状态
-        desktop_logic.anim_status=DESKTOP_DELAUNCH;
-        //更新动画目标
-        osui_ui_anim_set_tg(desktop_logic.app_anim,DESKTOP_HOME_POS);
-        osui_ui_anim_set_tg(desktop_logic.mask_anim,DESKTOP_ANIM_MASK_HOME_OPA);
-    }
-}
-
-//进入桌面
+//进入锁屏
 static void enter_locker(lv_event_t*e)
 {
     osui_log("enter locker");
@@ -330,49 +342,131 @@ static void desktop_runtime(lv_timer_t*timer)
             break;
             //启动
             case DESKTOP_LAUNCH:
-                //等待启动完成
-                if(osui_ui_anim_finish(desktop_logic.app_anim))
-                {
-                    //更新状态
-                    desktop_logic.anim_status=DESKTOP_APP;
-                    osui_log("enter app");
-                    // //立刻退出
-                    // app_delaunch();
-                }
+                // //等待启动完成
+                // if(osui_ui_anim_finish(desktop_logic.app_anim))
+                // {
+                //     //更新状态
+                //     desktop_logic.anim_status=DESKTOP_APP;
+                //     osui_log("enter app");
+                //     // //立刻退出
+                //     // app_delaunch();
+                // }
             break;
             //应用
             case DESKTOP_APP:
             break;
             //退出
             case DESKTOP_DELAUNCH:
-                //等待退出完成
-                if(osui_ui_anim_finish(desktop_logic.app_anim))
-                {
-                    //更新状态
-                    desktop_logic.anim_status=DESKTOP_HOME;
-                    //隐藏应用
-                    lv_obj_add_flag(desktop_logic.curr_app,LV_OBJ_FLAG_HIDDEN);
-                    //隐藏遮罩
-                    lv_obj_add_flag(desktop_ui.app_mask, LV_OBJ_FLAG_HIDDEN);
-                    //清除当前应用
-                    desktop_logic.curr_app=NULL;
-                    osui_log("enter home");
-                }
+                // //等待退出完成
+                // if(osui_ui_anim_finish(desktop_logic.app_anim))
+                // {
+                //     //更新状态
+                //     desktop_logic.anim_status=DESKTOP_HOME;
+                //     //隐藏应用
+                //     lv_obj_add_flag(desktop_logic.curr_app,LV_OBJ_FLAG_HIDDEN);
+                //     //隐藏遮罩
+                //     lv_obj_add_flag(desktop_ui.app_mask, LV_OBJ_FLAG_HIDDEN);
+                //     //清除当前应用
+                //     desktop_logic.curr_app=NULL;
+                //     osui_log("enter home");
+                // }
             break;
             default:
             break;
         }
-        //应用动画
-        if(!osui_ui_anim_finish(desktop_logic.app_anim))
-        {
-            osui_ui_anim_exec(desktop_logic.app_anim);
-        }
-        //遮罩动画
-        if(!osui_ui_anim_finish(desktop_logic.mask_anim))
-        {
-            osui_ui_anim_exec(desktop_logic.mask_anim);
-        }
+        // //应用动画
+        // if(!osui_ui_anim_finish(desktop_logic.app_anim))
+        // {
+        //     osui_ui_anim_exec(desktop_logic.app_anim);
+        // }
+        // //遮罩动画
+        // if(!osui_ui_anim_finish(desktop_logic.mask_anim))
+        // {
+        //     osui_ui_anim_exec(desktop_logic.mask_anim);
+        // }
     }
+}
+
+//启动应用
+static void app_launch(lv_event_t * e)
+{
+    //更新状态
+    desktop_logic.anim_status=DESKTOP_LAUNCH;
+    lv_obj_t * obj = lv_event_get_target(e);
+    //更新当前应用
+    desktop_logic.curr_app=lv_obj_get_user_data(obj);
+    //显示应用
+    lv_obj_remove_flag(desktop_logic.curr_app,LV_OBJ_FLAG_HIDDEN);
+    //显示遮罩
+    lv_obj_remove_flag(desktop_ui.app_mask, LV_OBJ_FLAG_HIDDEN);
+    // //更新动画目标
+    // osui_ui_anim_set_tg(desktop_logic.app_anim,DESKTOP_ANIM_APP_POS);
+    // osui_ui_anim_set_tg(desktop_logic.mask_anim,DESKTOP_ANIM_MASK_APP_OPA);
+    //应用动画
+    osui_ui_anim_lv_set_param(desktop_logic.app_anim, DESKTOP_ANIM_HOME_POS, DESKTOP_ANIM_APP_POS);
+    osui_ui_anim_lv_set_time(desktop_logic.app_anim, DESKTOP_APP_LAUNCH_TIME);
+    osui_ui_anim_lv_set_exec_cb(desktop_logic.app_anim, osui_ui_anim_lv_exec_cb_y);
+    osui_ui_anim_lv_set_finish_cb(desktop_logic.app_anim, app_launch_cb);
+    osui_ui_anim_lv_set_bezier_param(desktop_logic.app_anim, DESKTOP_APP_ANIM_LV_PATH_P1, DESKTOP_APP_ANIM_LV_PATH_P2);
+    osui_ui_anim_lv_start(desktop_logic.app_anim);
+    //遮罩动画
+    osui_ui_anim_lv_set_param(desktop_logic.mask_anim, DESKTOP_ANIM_MASK_HOME_OPA, DESKTOP_ANIM_MASK_APP_OPA);
+    osui_ui_anim_lv_set_time(desktop_logic.mask_anim, DESKTOP_APP_LAUNCH_TIME);
+    osui_ui_anim_lv_set_exec_cb(desktop_logic.mask_anim, osui_ui_anim_lv_exec_cb_bg_opa);
+    // osui_ui_anim_lv_set_finish_cb(desktop_logic.mask_anim, app_launch_cb);
+    osui_ui_anim_lv_set_bezier_param(desktop_logic.mask_anim, DESKTOP_APP_ANIM_LV_PATH_P1, DESKTOP_APP_ANIM_LV_PATH_P2);
+    osui_ui_anim_lv_start(desktop_logic.mask_anim);
+    osui_log("app launch");
+}
+
+//退出应用
+static void app_delaunch()
+{
+    //检查状态
+    if(desktop_logic.curr_app)
+    {
+        //更新状态
+        desktop_logic.anim_status=DESKTOP_DELAUNCH;
+        // //更新动画目标
+        // osui_ui_anim_set_tg(desktop_logic.app_anim,DESKTOP_HOME_POS);
+        // osui_ui_anim_set_tg(desktop_logic.mask_anim,DESKTOP_ANIM_MASK_HOME_OPA);
+        //应用动画
+        osui_ui_anim_lv_set_param(desktop_logic.app_anim, DESKTOP_ANIM_APP_POS, DESKTOP_ANIM_HOME_POS);
+        osui_ui_anim_lv_set_time(desktop_logic.app_anim, DESKTOP_APP_DELAUNCH_TIME);
+        osui_ui_anim_lv_set_exec_cb(desktop_logic.app_anim, osui_ui_anim_lv_exec_cb_y);
+        osui_ui_anim_lv_set_finish_cb(desktop_logic.app_anim, app_delaunch_cb);
+        osui_ui_anim_lv_set_bezier_param(desktop_logic.app_anim, DESKTOP_APP_ANIM_LV_PATH_P1, DESKTOP_APP_ANIM_LV_PATH_P2);
+        osui_ui_anim_lv_start(desktop_logic.app_anim);
+        //遮罩动画
+        osui_ui_anim_lv_set_param(desktop_logic.mask_anim, DESKTOP_ANIM_MASK_APP_OPA, DESKTOP_ANIM_MASK_HOME_OPA);
+        osui_ui_anim_lv_set_time(desktop_logic.mask_anim, DESKTOP_APP_DELAUNCH_TIME);
+        osui_ui_anim_lv_set_exec_cb(desktop_logic.mask_anim, osui_ui_anim_lv_exec_cb_bg_opa);
+        // osui_ui_anim_lv_set_finish_cb(desktop_logic.mask_anim, app_launch_cb);
+        osui_ui_anim_lv_set_bezier_param(desktop_logic.mask_anim, DESKTOP_APP_ANIM_LV_PATH_P1, DESKTOP_APP_ANIM_LV_PATH_P2);
+        osui_ui_anim_lv_start(desktop_logic.mask_anim);
+    }
+}
+
+//应用打开回调
+static void app_launch_cb()
+{
+    //更新状态
+    desktop_logic.anim_status=DESKTOP_APP;
+    osui_log("launch app");
+}
+
+//应用退出回调
+static void app_delaunch_cb()
+{
+    //更新状态
+    desktop_logic.anim_status=DESKTOP_HOME;
+    //隐藏应用
+    lv_obj_add_flag(desktop_logic.curr_app,LV_OBJ_FLAG_HIDDEN);
+    //隐藏遮罩
+    lv_obj_add_flag(desktop_ui.app_mask, LV_OBJ_FLAG_HIDDEN);
+    //清除当前应用
+    desktop_logic.curr_app=NULL;
+    osui_log("enter home");
 }
 
 //桌面逻辑初始化
@@ -381,19 +475,23 @@ static void desktop_logic_init()
     //长按桌面
     lv_obj_add_event_cb(desktop_ui.front, enter_locker, LV_EVENT_LONG_PRESSED, NULL);
     //创建运行时
-    lv_timer_create(desktop_runtime,OSUI_DESKTOP_SAMPLE_TIME,NULL);
+    lv_timer_create(desktop_runtime,DESKTOP_SAMPLE_TIME,NULL);
     //应用动画
-    desktop_logic.app_anim = osui_ui_anim_init();
-    osui_ui_anim_set_obj(desktop_logic.app_anim, desktop_ui.app_scr);
-    osui_ui_anim_set_type(desktop_logic.app_anim, OSUI_UI_ANIM_TYPE_Y);
-    osui_ui_anim_set_pd(desktop_logic.app_anim, OSUI_DESKTOP_APP_ANIM_PDC_P, OSUI_DESKTOP_APP_ANIM_PDC_D);
-    osui_ui_anim_set_tg(desktop_logic.app_anim,DESKTOP_HOME_POS);
+    desktop_logic.app_anim = osui_ui_anim_lv_init();
+    osui_ui_anim_lv_set_obj(desktop_logic.app_anim, desktop_ui.app_scr);
+    // desktop_logic.app_anim = osui_ui_anim_init();
+    // osui_ui_anim_set_obj(desktop_logic.app_anim, desktop_ui.app_scr);
+    // osui_ui_anim_set_type(desktop_logic.app_anim, OSUI_UI_ANIM_TYPE_Y);
+    // osui_ui_anim_set_pd(desktop_logic.app_anim, DESKTOP_APP_ANIM_PDC_P, DESKTOP_APP_ANIM_PDC_D);
+    // osui_ui_anim_set_tg(desktop_logic.app_anim,DESKTOP_HOME_POS);
     //遮罩动画
-    desktop_logic.mask_anim = osui_ui_anim_init();
-    osui_ui_anim_set_obj(desktop_logic.mask_anim, desktop_ui.app_mask);
-    osui_ui_anim_set_type(desktop_logic.mask_anim, OSUI_UI_ANIM_TYPE_OPA);
-    osui_ui_anim_set_pd(desktop_logic.mask_anim, OSUI_DESKTOP_APP_ANIM_PDC_P, OSUI_DESKTOP_APP_ANIM_PDC_D);
-    osui_ui_anim_set_tg(desktop_logic.mask_anim,DESKTOP_ANIM_MASK_HOME_OPA);
+    desktop_logic.mask_anim = osui_ui_anim_lv_init();
+    osui_ui_anim_lv_set_obj(desktop_logic.mask_anim, desktop_ui.app_mask);
+    // desktop_logic.mask_anim = osui_ui_anim_init();
+    // osui_ui_anim_set_obj(desktop_logic.mask_anim, desktop_ui.app_mask);
+    // osui_ui_anim_set_type(desktop_logic.mask_anim, OSUI_UI_ANIM_TYPE_OPA);
+    // osui_ui_anim_set_pd(desktop_logic.mask_anim, DESKTOP_APP_ANIM_PDC_P, DESKTOP_APP_ANIM_PDC_D);
+    // osui_ui_anim_set_tg(desktop_logic.mask_anim,DESKTOP_ANIM_MASK_HOME_OPA);
 }
 
 //UI桌面初始化
@@ -404,9 +502,9 @@ void osui_ui_desktop_init()
 }
 
 //桌面添加应用
-void osui_ui_desktop_add_app(const void *icon, const char *name, lv_obj_t*app)
+void osui_ui_desktop_add_app(const char *name, lv_obj_t*app)
 {
-    add_app(icon, name, app);
+    add_app(name, app);
 }
 
 //桌面退出应用
