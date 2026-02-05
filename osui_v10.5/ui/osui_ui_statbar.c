@@ -9,7 +9,7 @@
 
 //参数定义
 #define STATBAR_HEIGHT ((int16_t)(osui_disp_dp2px(STATBAR_HEIGHT_DP)))//状态栏高度
-#define STATBAR_OPA (0)//状态栏透明度
+#define STATBAR_OPA (LV_OPA_0)//状态栏透明度
 #define STATBAR_HEIGHT_DP (24)//状态栏DP高度
 #define STATBAR_GAP_DP (6)//状态栏DP边距
 #define STATBAR_SLIDE_EXIT_RATIO (0.3)//状态栏下滑锁屏阈值比例

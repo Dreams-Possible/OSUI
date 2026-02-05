@@ -10,7 +10,7 @@
 #define NAVBAR_REAL_POS ((int16_t)((NAVBAR_HEIGHT-osui_disp_dp2px(NAVBAR_THICK_DP))/2))//导航条相对位置
 #define NAVBAR_ORG_POS (0)//导航条原始位置
 #define NAVBAR_OFFSET_POS ((int16_t)(osui_disp_get()->ver-NAVBAR_HEIGHT))//导航条偏移位置
-#define NAVBAR_OPA (0)//导航条透明度
+#define NAVBAR_OPA (LV_OPA_0)//导航条透明度
 #define NAVBAR_SLIDE_EXIT_RATIO (0.1)//导航条上滑退出阈值比例
 #define NAVBAR_HEIGHT_DP (16)//导航条DP高度
 #define NAVBAR_THICK_DP (6)//导航条DP厚度

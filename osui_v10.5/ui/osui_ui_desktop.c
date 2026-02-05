@@ -16,10 +16,10 @@
 #define DESKTOP_NAVBAR_HEIGHT (osui_ui_navbar_get_height())//桌面导航条高度
 #define DESKTOP_ANIM_HOME_POS DESKTOP_HOME_POS//桌面动画桌面位置
 #define DESKTOP_ANIM_APP_POS (0)//桌面动画应用位置
-#define DESKTOP_ANIM_MASK_HOME_OPA (0)//桌面动画遮罩桌面透明度
-#define DESKTOP_ANIM_MASK_APP_OPA (64)//桌面动画遮罩应用透明度
-#define DESKTOP_APP_BG_OPA (0)//桌面应用背景透明度
-#define DESKTOP_APP_OPA (64)//桌面应用透明度
+#define DESKTOP_ANIM_MASK_HOME_OPA (LV_OPA_0)//桌面动画遮罩桌面透明度
+#define DESKTOP_ANIM_MASK_APP_OPA (LV_OPA_20)//桌面动画遮罩应用透明度
+#define DESKTOP_APP_BG_OPA (LV_OPA_0)//桌面应用背景透明度
+#define DESKTOP_APP_OPA (LV_OPA_20)//桌面应用透明度
 #define DESKTOP_INFO_LAYOUT_LEFT_RATIO (0.1)//桌面信息布局左间距比例
 #define DESKTOP_INFO_LAYOUT_TOP_RATIO (0.1)//桌面信息布局顶间距比例
 #define DESKTOP_LIST_LAYOUT_HOR_RATIO (0.6)//桌面列表布局水平比例
