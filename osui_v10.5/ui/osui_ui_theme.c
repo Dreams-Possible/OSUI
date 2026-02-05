@@ -24,7 +24,7 @@ static theme_logic_t theme_logic = {0};
 //主题颜色取反
 lv_color_t osui_theme_color_invert(lv_color_t color);
 //主题颜色智能取反
-lv_color_t osui_themeosui_theme_smart_invert(lv_color_t color);
+lv_color_t osui_theme_smart_invert(lv_color_t color);
 //设置控件颜色
 void osui_ui_locker_set_font_color(lv_color_t color);
 void osui_ui_locker_set_back_color(lv_color_t color);

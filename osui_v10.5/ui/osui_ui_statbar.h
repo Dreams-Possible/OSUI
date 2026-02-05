@@ -9,9 +9,7 @@
 #include"osui/input/osui_input.h"
 
 //UI状态栏初始化
-lv_obj_t* osui_ui_navbar_init();
-//UI状态栏初始化清理
-void osui_ui_navbar_init_clean();
+void osui_ui_statbar_init();
 //获取状态栏高度
 uint16_t osui_ui_statbar_get_height();
 //设置状态栏图标

@@ -5,8 +5,6 @@
 #include"osui/core/osui_base.h"
 //OSUI显示
 #include"osui/disp/osui_disp.h"
-// //OSUI输入
-// #include"osui/input/osui_input.h"
 
 //UI锁屏初始化
 void osui_ui_locker_init();

@@ -22,7 +22,7 @@
 //导航条UI类
 typedef struct navbar_ui_t
 {
-    lv_obj_t * root;
+    // lv_obj_t * root;
     lv_obj_t * parent;
     lv_obj_t * back;
     lv_obj_t * front;
@@ -47,7 +47,7 @@ typedef struct navbar_logic_t
 static navbar_logic_t navbar_logic = {0};
 
 //导航条UI初始化
-static lv_obj_t* navbar_ui_init();
+static void navbar_ui_init();
 //导航条被按下
 static void navbar_pressed(lv_event_t*e);
 //导航条被释放
@@ -56,9 +56,9 @@ static void navbar_released(lv_event_t*e);
 //导航条逻辑初始化
 static void navbar_logic_init();
 //UI导航条初始化
-lv_obj_t* osui_ui_navbar_init();
-//UI导航条初始化清理
-void osui_ui_navbar_init_clean();
+void osui_ui_navbar_init();
+//获取导航条高度
+uint16_t osui_ui_navbar_get_height();
 //导航条运行时
 bool osui_ui_locker_get_status();
 static void navbar_runtime(lv_timer_t*timer);
@@ -66,91 +66,77 @@ static void navbar_runtime(lv_timer_t*timer);
 void osui_ui_navbar_set_color(lv_color_t color);
 
 //导航条UI初始化
-static lv_obj_t* navbar_ui_init()
+static void navbar_ui_init()
 {
     //获取显示对象
     osui_dispinfo_t*osui_dispinfo=osui_disp_get();
-    //导航条控件
-    lv_obj_t *ret = NULL;
-    //创建虚拟容器
-    lv_obj_t *obj = lv_obj_create(0);
-    navbar_ui.root=obj;
-    lv_obj_set_pos(obj, 0, 0);
-    lv_obj_set_size(obj, osui_dispinfo->hor, osui_dispinfo->ver);
+    //获取UI框架对象
+    lv_obj_t *obj = lv_obj_create(*osui_uiframe_get());
+    //初始化导航条父对象
+    navbar_ui.parent = obj;
+    lv_obj_set_pos(obj, 0, osui_dispinfo->ver-NAVBAR_HEIGHT);
+    lv_obj_set_size(obj, osui_dispinfo->hor, NAVBAR_HEIGHT);
+    lv_obj_set_style_pad_left(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_top(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_right(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_bottom(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_set_style_bg_opa(obj, 127, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_set_style_bg_color(obj, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_remove_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+    //绘制导航条样式
+    lv_obj_t *parent_obj = obj;
     {
-        lv_obj_t *parent_obj = obj;
+        //背景
+        lv_obj_t *obj = lv_obj_create(parent_obj);
+        navbar_ui.back=obj;
+        lv_obj_set_pos(obj, 0, 0);
+        lv_obj_set_size(obj, osui_dispinfo->hor, NAVBAR_HEIGHT);
+        lv_obj_set_style_pad_left(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_pad_top(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_pad_right(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_pad_bottom(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_bg_opa(obj, NAVBAR_OPA, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_bg_color(obj, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+        // lv_obj_remove_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+    }
+    {
+        //前景
+        lv_obj_t *obj = lv_obj_create(parent_obj);
+        navbar_ui.front=obj;
+        lv_obj_set_pos(obj, 0, 0);
+        lv_obj_set_size(obj, osui_dispinfo->hor, NAVBAR_HEIGHT);
+        lv_obj_set_style_pad_left(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_pad_top(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_pad_right(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_pad_bottom(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_bg_opa(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        // lv_obj_set_style_bg_opa(obj, 127, LV_PART_MAIN | LV_STATE_DEFAULT);
+        // lv_obj_set_style_bg_color(obj, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+        // lv_obj_remove_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
         {
-            //父容器
-            lv_obj_t *obj = lv_obj_create(parent_obj);
-            navbar_ui.parent=obj;
-            ret=obj;
-            lv_obj_set_pos(obj, 0, osui_dispinfo->ver-NAVBAR_HEIGHT);
-            lv_obj_set_size(obj, osui_dispinfo->hor, NAVBAR_HEIGHT);
-            lv_obj_set_style_pad_left(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_pad_top(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_pad_right(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_pad_bottom(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_set_style_bg_opa(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-            // lv_obj_set_style_bg_opa(obj, 127, LV_PART_MAIN | LV_STATE_DEFAULT);
-            // lv_obj_set_style_bg_color(obj, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_remove_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+            lv_obj_t *parent_obj = obj;
             {
-                lv_obj_t *parent_obj = obj;
-                {
-                    //背景
-                    lv_obj_t *obj = lv_obj_create(parent_obj);
-                    navbar_ui.back=obj;
-                    lv_obj_set_pos(obj, 0, 0);
-                    lv_obj_set_size(obj, osui_dispinfo->hor, NAVBAR_HEIGHT);
-                    lv_obj_set_style_pad_left(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_pad_top(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_pad_right(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_pad_bottom(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_bg_opa(obj, NAVBAR_OPA, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_bg_color(obj, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-                    // lv_obj_remove_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
-                }
-                {
-                    //前景
-                    lv_obj_t *obj = lv_obj_create(parent_obj);
-                    navbar_ui.front=obj;
-                    lv_obj_set_pos(obj, 0, 0);
-                    lv_obj_set_size(obj, osui_dispinfo->hor, NAVBAR_HEIGHT);
-                    lv_obj_set_style_pad_left(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_pad_top(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_pad_right(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_pad_bottom(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_bg_opa(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    // lv_obj_set_style_bg_opa(obj, 127, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    // lv_obj_set_style_bg_color(obj, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-                    // lv_obj_remove_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
-                    {
-                        lv_obj_t *parent_obj = obj;
-                        {
-                            //导航条
-                            lv_obj_t *obj = lv_button_create(parent_obj);
-                            navbar_ui.bar=obj;
-                            lv_obj_set_pos(obj, (int16_t)(osui_dispinfo->hor/4.0), NAVBAR_REAL_POS);
-                            lv_obj_set_size(obj, (int16_t)(osui_dispinfo->hor/2.0), (int16_t)osui_disp_dp2px(NAVBAR_THICK_DP));
-                            lv_obj_set_style_transform_height(obj, 0, LV_PART_MAIN | LV_STATE_PRESSED);
-                            lv_obj_set_style_transform_width(obj, 0, LV_PART_MAIN | LV_STATE_PRESSED);
-                            lv_obj_set_style_shadow_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                            lv_obj_set_style_shadow_offset_y(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                            lv_obj_set_style_bg_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-                            lv_obj_set_style_bg_color(navbar_ui.bar, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-                        }
-                    }
-                }
+                //导航条
+                lv_obj_t *obj = lv_button_create(parent_obj);
+                navbar_ui.bar=obj;
+                lv_obj_set_pos(obj, (int16_t)(osui_dispinfo->hor/4.0), NAVBAR_REAL_POS);
+                lv_obj_set_size(obj, (int16_t)(osui_dispinfo->hor/2.0), (int16_t)osui_disp_dp2px(NAVBAR_THICK_DP));
+                lv_obj_set_style_transform_height(obj, 0, LV_PART_MAIN | LV_STATE_PRESSED);
+                lv_obj_set_style_transform_width(obj, 0, LV_PART_MAIN | LV_STATE_PRESSED);
+                lv_obj_set_style_shadow_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_obj_set_style_shadow_offset_y(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_obj_set_style_bg_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_obj_set_style_bg_color(navbar_ui.bar, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
             }
         }
     }
-    return ret;
 }
 
 //导航条被按下
@@ -217,17 +203,17 @@ static void navbar_logic_init()
 }
 
 //UI导航条初始化
-lv_obj_t* osui_ui_navbar_init()
+void osui_ui_navbar_init()
 {
-    lv_obj_t* ret = navbar_ui_init();
+    navbar_ui_init();
     navbar_logic_init();
-    return ret;
+    // return ret;
 }
 
-//UI导航条初始化清理
-void osui_ui_navbar_init_clean()
+//获取导航条高度
+uint16_t osui_ui_navbar_get_height()
 {
-    lv_obj_delete(navbar_ui.root);
+    return (uint16_t)NAVBAR_HEIGHT;
 }
 
 //导航条运行时

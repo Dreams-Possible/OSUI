@@ -9,9 +9,9 @@
 #include"osui/input/osui_input.h"
 
 //UI导航条初始化
-lv_obj_t* osui_ui_navbar_init();
-//UI导航条初始化清理
-void osui_ui_navbar_init_clean();
+void osui_ui_navbar_init();
+//获取导航条高度
+uint16_t osui_ui_navbar_get_height();
 //设置导航条颜色
 void osui_ui_navbar_set_color(lv_color_t color);
 

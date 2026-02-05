@@ -109,11 +109,9 @@ static void locker_ui_init()
     //获取显示对象
     osui_dispinfo_t*osui_dispinfo=osui_disp_get();
     //获取UI框架对象
-    osui_uiframe_t*osui_uiframe=osui_uiframe_get();
-    lv_obj_t *obj = lv_obj_create(osui_uiframe->desktop);
-    osui_uiframe->locker = obj;
+    lv_obj_t *obj = lv_obj_create(*osui_uiframe_get());
+    //初始化锁屏父对象
     locker_ui.parent = obj;
-    //初始化UI框架对象
     lv_obj_set_pos(obj, 0, 0);
     lv_obj_set_size(obj, osui_dispinfo->hor, osui_dispinfo->ver);
     lv_obj_set_style_pad_left(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -189,6 +187,7 @@ static void locker_ui_init()
                             locker_ui.time = obj;
                             lv_obj_set_pos(obj, layout_hor, layout_ver);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_obj_set_style_text_color(obj, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_obj_set_style_text_font(obj, &OSUI_UI_LABLE_FONT_MAX, LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_label_set_text(obj, "9:30");
                             //更新布局
@@ -200,6 +199,7 @@ static void locker_ui_init()
                             locker_ui.date = obj;
                             lv_obj_set_pos(obj, layout_hor, layout_ver);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_obj_set_style_text_color(obj, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_obj_set_style_text_font(obj, &OSUI_UI_LABLE_FONT_MID, LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_label_set_text(obj, "January 1");
                             //更新布局
@@ -211,6 +211,7 @@ static void locker_ui_init()
                             locker_ui.year = obj;
                             lv_obj_set_pos(obj, layout_hor, layout_ver);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_obj_set_style_text_color(obj, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_obj_set_style_text_font(obj, &OSUI_UI_LABLE_FONT_MID, LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_label_set_text(obj, "2026");
                         }
@@ -231,6 +232,7 @@ static void locker_ui_init()
                             locker_ui.icon = obj;
                             lv_obj_set_pos(obj, layout_hor, layout_ver);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_obj_set_style_text_color(obj, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_obj_set_style_text_font(obj, &OSUI_UI_LABLE_FONT_MIN, LV_PART_MAIN | LV_STATE_DEFAULT);
                             lv_label_set_text(obj, LV_SYMBOL_WIFI " " LV_SYMBOL_BLUETOOTH " " LV_SYMBOL_BATTERY_FULL);
                         }

@@ -12,8 +12,16 @@
 #include"osui/ui/osui_ui_locker.h"
 //UI桌面
 #include"osui/ui/osui_ui_desktop.h"
+//UI导航栏
+#include"osui/ui/osui_ui_navbar.h"
+//UI状态栏
+#include"osui/ui/osui_ui_statbar.h"
 //UI主题
 #include"osui/ui/osui_ui_theme.h"
+
+//应用
+#include"osui/app/app_example.h"
+#include"osui/app/app_file_explorer.h"
 
 //壁纸路径
 #define OSUI_WP_L "C:/Users/Windows/Desktop/project/lv_port_win_codeblocks-master/osui/wp/wp_l.bmp"
@@ -137,6 +145,10 @@ void osui_init()
     osui_ui_frame_init();
     //UI桌面初始化
     osui_ui_desktop_init();
+    //UI导航条初始化
+    osui_ui_navbar_init();
+    //UI状态栏初始化
+    osui_ui_statbar_init();
     //UI锁屏初始化
     osui_ui_locker_init();
     //UI框架载入
@@ -148,8 +160,10 @@ void osui_init()
     //添加应用
     osui_ui_desktop_add_app(LV_SYMBOL_WARNING "  " "Test1", test1());
     osui_ui_desktop_add_app(LV_SYMBOL_SETTINGS "  " "Test2", test2());
-    osui_ui_desktop_add_app(LV_SYMBOL_BELL "  " "Test3", test3());
-
+    osui_ui_desktop_add_app(LV_SYMBOL_BELL "  " "Test333333333333333333333333333333333", test3());
+    osui_ui_desktop_add_app(LV_SYMBOL_CHARGE "  " "APP EXAMPLE", app_example_init());
+    osui_ui_desktop_add_app(LV_SYMBOL_FILE "  " "FILE EXPLORER", app_file_explorer_init());
+    
     //系统初始化
     osui_sys_init();
     osui_sys_set_wifi_stat(1);

@@ -13,6 +13,7 @@
 #define DESKTOP_HOME_POS (osui_disp_get()->ver)//桌面位置
 // #define DESKTOP_ANIM_APP_POS (osui_ui_statbar_get_height())//应用位置
 #define DESKTOP_STATBAR_HEIGHT (osui_ui_statbar_get_height())//桌面状态栏高度
+#define DESKTOP_NAVBAR_HEIGHT (osui_ui_navbar_get_height())//桌面导航条高度
 #define DESKTOP_ANIM_HOME_POS DESKTOP_HOME_POS//桌面动画桌面位置
 #define DESKTOP_ANIM_APP_POS (0)//桌面动画应用位置
 #define DESKTOP_ANIM_MASK_HOME_OPA (0)//桌面动画遮罩桌面透明度
@@ -21,7 +22,7 @@
 #define DESKTOP_APP_OPA (64)//桌面应用透明度
 #define DESKTOP_INFO_LAYOUT_LEFT_RATIO (0.1)//桌面信息布局左间距比例
 #define DESKTOP_INFO_LAYOUT_TOP_RATIO (0.1)//桌面信息布局顶间距比例
-#define DESKTOP_LIST_LAYOUT_HOR_RATIO (0.5)//桌面列表布局水平比例
+#define DESKTOP_LIST_LAYOUT_HOR_RATIO (0.6)//桌面列表布局水平比例
 #define DESKTOP_LIST_LAYOUT_VER_RATIO (0.6)//桌面列表布局垂直比例
 #define DESKTOP_SAMPLE_TIME (LV_INDEV_STATE_PR*2)//桌面采样时间
 #define DESKTOP_APP_LAUNCH_TIME (600)//应用启动动画时间
@@ -30,6 +31,7 @@
 #define DESKTOP_APP_ANIM_LV_PATH_P2 (1024)//桌面应用动画LVGL轨迹参数2
 #define DESKTOP_APP_LIST_ITEM_HEIGHT_DP (32)//桌面应用列表项目DP高度
 #define DESKTOP_APP_LIST_ITEM_HEIGHT ((int16_t)(osui_disp_dp2px(DESKTOP_APP_LIST_ITEM_HEIGHT_DP)))//桌面应用列表项目高度
+#define DESKTOP_APP_LIST_ITEM_GAP ((int16_t)(osui_disp_dp2px(4)))//桌面应用列表项目间距
 
 //桌面UI类
 typedef struct desktop_ui_t
@@ -68,10 +70,10 @@ typedef struct desktop_logic_t
 static desktop_logic_t desktop_logic = {0};
 
 //桌面UI初始化
-lv_obj_t*osui_ui_navbar_init();
-void osui_ui_navbar_init_clean();
-lv_obj_t*osui_ui_statbar_init();
-void osui_ui_statbar_init_clean();
+// lv_obj_t*osui_ui_navbar_init();
+// void osui_ui_navbar_init_clean();
+// lv_obj_t*osui_ui_statbar_init();
+// void osui_ui_statbar_init_clean();
 static void desktop_ui_init();
 //添加应用
 static void add_app( const char *name, lv_obj_t*app);
@@ -83,6 +85,7 @@ bool osui_ui_locker_get_status();
 static void desktop_runtime(lv_timer_t*timer);
 //启动应用
 uint16_t osui_ui_statbar_get_height();
+uint16_t osui_ui_navbar_get_height();
 static void app_launch(lv_event_t * e);
 //退出应用
 static void app_delaunch();
@@ -121,11 +124,9 @@ static void desktop_ui_init()
     //获取显示对象
     osui_dispinfo_t*osui_dispinfo=osui_disp_get();
     //获取UI框架对象
-    osui_uiframe_t*osui_uiframe=osui_uiframe_get();
-    lv_obj_t *obj = lv_obj_create(0);
-    osui_uiframe->desktop = obj;
+    lv_obj_t *obj = *osui_uiframe_get();
+    //初始化桌面父对象
     desktop_ui.parent = obj;
-    //初始化UI框架对象
     lv_obj_set_pos(obj, 0, 0);
     lv_obj_set_size(obj, osui_dispinfo->hor, osui_dispinfo->ver);
     lv_obj_set_style_pad_left(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -177,6 +178,7 @@ static void desktop_ui_init()
                 desktop_ui.time = obj;
                 lv_obj_set_pos(obj, layout_hor, layout_ver);
                 lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                lv_obj_set_style_text_color(obj, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
                 lv_obj_set_style_text_font(obj, &OSUI_UI_LABLE_FONT_MAX, LV_PART_MAIN | LV_STATE_DEFAULT);
                 lv_label_set_text(obj, "9:30");
                 //更新布局
@@ -188,6 +190,7 @@ static void desktop_ui_init()
                 desktop_ui.date = obj;
                 lv_obj_set_pos(obj, layout_hor, layout_ver);
                 lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                lv_obj_set_style_text_color(obj, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
                 lv_obj_set_style_text_font(obj, &OSUI_UI_LABLE_FONT_MIN, LV_PART_MAIN | LV_STATE_DEFAULT);
                 lv_label_set_text(obj, "January 1");
                 //更新布局
@@ -197,16 +200,22 @@ static void desktop_ui_init()
                 //更新布局
                 layout_ver+=osui_ui_lable_get_ver(&OSUI_UI_LABLE_FONT_MIN);
                 //桌面应用列表
-                lv_obj_t * obj = lv_list_create(parent_obj);
+                lv_obj_t * obj = lv_obj_create(parent_obj);
                 desktop_ui.app_list = obj;
                 lv_obj_set_pos(obj, layout_hor, layout_ver);
-                // lv_obj_set_size(obj, (int16_t)(osui_dispinfo->hor*DESKTOP_LIST_LAYOUT_HOR_RATIO), (int16_t)(osui_dispinfo->ver*DESKTOP_LIST_LAYOUT_VER_RATIO));
                 lv_obj_set_size(obj, (int16_t)(osui_dispinfo->hor*DESKTOP_LIST_LAYOUT_HOR_RATIO), 0);
+                lv_obj_set_style_pad_top(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_obj_set_style_pad_bottom(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_obj_set_style_pad_left(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_obj_set_style_pad_right(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_obj_set_style_pad_row(obj, DESKTOP_APP_LIST_ITEM_GAP, LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_obj_set_style_pad_column(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
                 lv_obj_set_style_bg_opa(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                // lv_obj_set_style_border_width(obj, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
                 lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-                lv_obj_remove_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                // lv_obj_set_style_outline_width(obj, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_obj_set_flex_flow(obj, LV_FLEX_FLOW_COLUMN);
+                lv_obj_set_scroll_dir(obj, LV_DIR_VER);
             }
         }
     }
@@ -242,28 +251,29 @@ static void desktop_ui_init()
         lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
         lv_obj_set_style_bg_opa(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     }
-    {
-        //导航条
-        lv_obj_t *obj = osui_ui_navbar_init();
-        desktop_ui.nav_bar = obj;
-        lv_obj_set_parent(obj, parent_obj);
-        osui_ui_navbar_init_clean();
-    }
-    {
-        //状态栏
-        lv_obj_t *obj = osui_ui_statbar_init();
-        desktop_ui.stat_bar = obj;
-        lv_obj_set_parent(obj, parent_obj);
-        osui_ui_statbar_init_clean();
-    }
+    // {
+    //     //导航条
+    //     lv_obj_t *obj = osui_ui_navbar_init();
+    //     desktop_ui.nav_bar = obj;
+    //     lv_obj_set_parent(obj, parent_obj);
+    //     osui_ui_navbar_init_clean();
+    // }
+    // {
+    //     //状态栏
+    //     lv_obj_t *obj = osui_ui_statbar_init();
+    //     desktop_ui.stat_bar = obj;
+    //     lv_obj_set_parent(obj, parent_obj);
+    //     osui_ui_statbar_init_clean();
+    // }
 }
 
 //添加应用
-static void add_app( const char *name, lv_obj_t*app)
+static void add_app(const char *name, lv_obj_t*app)
 {
     //创建图标
     // lv_obj_t * btn = lv_list_add_button(desktop_ui.app_list, icon, name);
     lv_obj_t * btn = lv_button_create(desktop_ui.app_list);
+    lv_obj_set_pos(btn, 0, 0);
     lv_obj_set_size(btn, (int16_t)(osui_disp_get()->hor*DESKTOP_LIST_LAYOUT_HOR_RATIO), DESKTOP_APP_LIST_ITEM_HEIGHT);
     lv_obj_set_style_transform_height(btn, 0, LV_PART_MAIN | LV_STATE_PRESSED);
     lv_obj_set_style_transform_width(btn, 0, LV_PART_MAIN | LV_STATE_PRESSED);
@@ -273,18 +283,24 @@ static void add_app( const char *name, lv_obj_t*app)
     lv_obj_set_style_border_width(btn, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(btn, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_color(btn, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(btn, 128, LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_bg_opa(btn, 255, LV_PART_MAIN | LV_STATE_PRESSED);
     lv_obj_set_style_bg_color(btn, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_PRESSED);
     lv_obj_add_event_cb(btn, app_launch, LV_EVENT_CLICKED, NULL);
     lv_obj_t * label = lv_label_create(btn);
+    lv_obj_set_pos(label, 0, 0);
+    lv_obj_set_size(label, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+    lv_obj_set_style_text_color(label, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(label, &OSUI_UI_LABLE_FONT_CONTENT, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_label_set_text_fmt(label, name);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL_CIRCULAR);
     //调整布局
-    uint16_t curr_ver=lv_obj_get_child_count(desktop_ui.app_list)*DESKTOP_APP_LIST_ITEM_HEIGHT;
+    uint16_t curr_ver=lv_obj_get_child_count(desktop_ui.app_list)*(DESKTOP_APP_LIST_ITEM_HEIGHT+DESKTOP_APP_LIST_ITEM_GAP);
     // osui_log("count:%d",lv_obj_get_child_count(desktop_ui.app_list));
     // osui_log("height:%d",lv_obj_get_height(btn));
     // osui_log("curr_ver:%d",curr_ver);
     uint16_t max_ver=(int16_t)(osui_disp_get()->ver*DESKTOP_LIST_LAYOUT_VER_RATIO);
+    // uint16_t max_ver=(int16_t)(osui_disp_get()->ver);
+    // osui_log("max_ver:%d",max_ver);
     if(curr_ver<max_ver)
     {
         lv_obj_set_height(desktop_ui.app_list, curr_ver);
@@ -522,7 +538,7 @@ int16_t osui_ui_desktop_get_width()
 //获取桌面高度
 int16_t osui_ui_desktop_get_height()
 {
-    return osui_disp_get()->ver-DESKTOP_STATBAR_HEIGHT;
+    return osui_disp_get()->ver-DESKTOP_STATBAR_HEIGHT-DESKTOP_NAVBAR_HEIGHT;
 }
 
 //设置桌面时间
@@ -551,14 +567,14 @@ void osui_ui_desktop_set_font_color(lv_color_t color)
         lv_obj_t * btn = lv_obj_get_child(list, f);
         for(uint16_t ff = 0; ff < lv_obj_get_child_count(btn); ++ff)
         {
-            lv_obj_t * lable = lv_obj_get_child(btn, ff);
-            if(lv_obj_check_type(lable, &lv_image_class))
+            lv_obj_t * obj = lv_obj_get_child(btn, ff);
+            if(lv_obj_check_type(obj, &lv_image_class))
             {
-                lv_obj_set_style_text_color(lable, color, LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_obj_set_style_text_color(obj, color, LV_PART_MAIN | LV_STATE_DEFAULT);
             }
-            if(lv_obj_check_type(lable, &lv_label_class))
+            if(lv_obj_check_type(obj, &lv_label_class))
             {
-                lv_obj_set_style_text_color(lable, color, LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_obj_set_style_text_color(obj, color, LV_PART_MAIN | LV_STATE_DEFAULT);
             }
         }
     }
