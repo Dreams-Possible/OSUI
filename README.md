@@ -30,7 +30,7 @@ OSUI（原名LVUI）是一个基于LVGL的模拟现代流行移动操作系统�
 - **主题系统**：支持自定义主题和壁纸
 - **跨平台**：基于LVGL，支持多种显示设备和输入设备
 
-### 🖼️ 项目截图
+### 🖼️ 项目截图与动画演示
 
 <div align="center">
   <table>
@@ -47,18 +47,25 @@ OSUI（原名LVUI）是一个基于LVGL的模拟现代流行移动操作系统�
     <tr>
       <td align="center"><img width="200" alt="应用界面" src="https://github.com/user-attachments/assets/2ce98e76-dd0d-46cf-8643-798763cff213" /></td>
       <td align="center"><img width="200" alt="桌面界面（黑暗）" src="https://github.com/user-attachments/assets/f883c7a4-d39e-4264-88ab-dbe2bc8885af" /></td>
-      <td align="center"><img width="200" alt="屏界面（黑暗）" src="https://github.com/user-attachments/assets/cf15d4c1-5c50-4b44-96fb-a546184a2051" /></td>
+      <td align="center"><img width="200" alt="锁屏界面（黑暗）" src="https://github.com/user-attachments/assets/cf15d4c1-5c50-4b44-96fb-a546184a2051" /></td>
     </tr>
     <tr>
       <td align="center">应用界面</td>
       <td align="center">桌面界面（黑暗）</td>
       <td align="center">锁屏界面（黑暗）</td>
     </tr>
+    <tr>
+      <td align="center"><img width="300" alt="动画效果1" src="https://github.com/user-attachments/assets/3de7edfd-0ca6-4dd5-a254-304348f6ae63" /></td>
+      <td align="center"><img width="300" alt="动画效果2" src="https://github.com/user-attachments/assets/c7f1a102-c9e2-4f52-a248-b33735550f3b" /></td>
+      <td align="center"></td>
+    </tr>
+    <tr>
+      <td align="center">页动画效果1</td>
+      <td align="center">图动画效果2</td>
+      <td align="center"></td>
+    </tr>
   </table>
 </div>
-
-![动画效果](https://github.com/user-attachments/assets/3de7edfd-0ca6-4dd5-a254-304348f6ae63)
-![动画效果](https://github.com/user-attachments/assets/c7f1a102-c9e2-4f52-a248-b33735550f3b)
 
 
 
