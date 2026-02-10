@@ -18,19 +18,44 @@ OSUI（原名LVUI）是一个基于LVGL的模拟现代流行移动操作系统�
 ## ✨ 特性
 
 - **现代UI设计**：模拟现代移动操作系统的界面风格
+- **自适应屏幕**：使用DP（密度无关像素）技术，UI可自适应不同尺寸屏幕
+- **跨屏移植**：在不同大小屏幕之间移植无需二次开发
 - **模块化架构**：清晰的模块划分，易于扩展和维护
 - **完整UI组件**：包含桌面、锁屏、状态栏、导航栏等完整UI组件
+- **简易应用集成**：预留添加app接口，只需要一个`lv_obj_t`对象就可以添加应用界面
+- **系统级API**：提供类系统API，可自定义时间、日期、状态图表等系统元素
+- **智能主题管理**：可通过设置主题颜色自动更改壁纸及字体颜色等
 - **应用框架**：提供应用开发框架，支持多应用管理
 - **动画支持**：内置动画系统，提供流畅的UI交互体验
 - **主题系统**：支持自定义主题和壁纸
 - **跨平台**：基于LVGL，支持多种显示设备和输入设备
 
-<img width="576" height="695" alt="2275f567126cfee19d5384635703ea70" src="https://github.com/user-attachments/assets/89d2c00d-42a9-49e9-9d8c-0433d703d205" />
-<img width="606" height="700" alt="b6495243ea2cba5ac0ed71096404c250_720" src="https://github.com/user-attachments/assets/a95c621e-42ec-4d20-a0b4-8fdaafa88de6" />
-<img width="578" height="708" alt="f851ba2f3fe9b8150787cf83b80d49d1" src="https://github.com/user-attachments/assets/ce126ba1-0467-4b2f-8bb3-174f58c42049" />
-<img width="609" height="690" alt="927e88e4cc9af3912a800e65460ceaae" src="https://github.com/user-attachments/assets/2ce98e76-dd0d-46cf-8643-798763cff213" />
-<img width="592" height="709" alt="800dba5a0a9cbc0ef32fb038da0e8e8e_720" src="https://github.com/user-attachments/assets/f883c7a4-d39e-4264-88ab-dbe2bc8885af" />
-<img width="603" height="684" alt="0a81279027f92c38883dc094f8b80055_720" src="https://github.com/user-attachments/assets/cf15d4c1-5c50-4b44-96fb-a546184a2051" />
+### 🖼️ 项目截图
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center"><img width="200" alt="桌面界面" src="https://github.com/user-attachments/assets/89d2c00d-42a9-49e9-9d8c-0433d703d205" /></td>
+      <td align="center"><img width="200" alt="应用界面" src="https://github.com/user-attachments/assets/a95c621e-42ec-4d20-a0b4-8fdaafa88de6" /></td>
+      <td align="center"><img width="200" alt="锁屏界面" src="https://github.com/user-attachments/assets/ce126ba1-0467-4b2f-8bb3-174f58c42049" /></td>
+    </tr>
+    <tr>
+      <td align="center">锁屏界面</td>
+      <td align="center">桌面界面</td>
+      <td align="center">应用界面</td>
+    </tr>
+    <tr>
+      <td align="center"><img width="200" alt="状态栏" src="https://github.com/user-attachments/assets/2ce98e76-dd0d-46cf-8643-798763cff213" /></td>
+      <td align="center"><img width="200" alt="导航栏" src="https://github.com/user-attachments/assets/f883c7a4-d39e-4264-88ab-dbe2bc8885af" /></td>
+      <td align="center"><img width="200" alt="主题设置" src="https://github.com/user-attachments/assets/cf15d4c1-5c50-4b44-96fb-a546184a2051" /></td>
+    </tr>
+    <tr>
+      <td align="center">应用界面</td>
+      <td align="center">桌面界面（黑暗）</td>
+      <td align="center">锁屏界面（黑暗）</td>
+    </tr>
+  </table>
+</div>
 
 
 ## 📁 项目结构
@@ -128,20 +153,41 @@ osui_ui_desktop_add_app("示例应用", app);
 
 ## 🔧 配置和自定义
 
+### 系统API配置
+```c
+// 设置系统时间
+osui_ui_desktop_set_time("14:30");
+
+// 设置系统日期
+osui_ui_desktop_set_date("2024-01-15");
+
+// 设置状态栏图标
+// 支持信号、电量、WiFi等状态图标显示
+```
+
 ### 主题配置
 ```c
-// 设置主题颜色
+// 设置主题颜色（自动调整壁纸和字体颜色）
 osui_ui_theme_set_color(lv_color_hex(0xffffffff));
 
 // 设置壁纸
 osui_ui_desktop_set_wallpaper("wp/wp_d.bmp");
+
+// 设置字体颜色
+osui_ui_desktop_set_font_color(lv_color_hex(0xFFFFFF));
+
+// 设置背景颜色
+osui_ui_desktop_set_back_color(lv_color_hex(0x000000));
 ```
 
 ### 显示配置
 ```c
-// 获取桌面尺寸
+// 获取桌面尺寸（DP自适应）
 int16_t width = osui_ui_desktop_get_width();
 int16_t height = osui_ui_desktop_get_height();
+
+// 设置DP缩放比例（自适应不同屏幕密度）
+// 框架自动处理DP到像素的转换
 ```
 
 ## 📱 应用开发
