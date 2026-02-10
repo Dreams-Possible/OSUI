@@ -57,6 +57,10 @@ OSUI（原名LVUI）是一个基于LVGL的模拟现代流行移动操作系统�
   </table>
 </div>
 
+![QQ2026210-12754-HD](https://github.com/user-attachments/assets/3de7edfd-0ca6-4dd5-a254-304348f6ae63)
+![QQ2026210-12754-HD (1)](https://github.com/user-attachments/assets/c7f1a102-c9e2-4f52-a248-b33735550f3b)
+
+
 
 ## 📁 项目结构
 
