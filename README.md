@@ -35,9 +35,9 @@ OSUI（原名LVUI）是一个基于LVGL的模拟现代流行移动操作系统�
 <div align="center">
   <table>
     <tr>
-      <td align="center"><img width="200" alt="桌面界面" src="https://github.com/user-attachments/assets/89d2c00d-42a9-49e9-9d8c-0433d703d205" /></td>
-      <td align="center"><img width="200" alt="应用界面" src="https://github.com/user-attachments/assets/a95c621e-42ec-4d20-a0b4-8fdaafa88de6" /></td>
-      <td align="center"><img width="200" alt="锁屏界面" src="https://github.com/user-attachments/assets/ce126ba1-0467-4b2f-8bb3-174f58c42049" /></td>
+      <td align="center"><img width="200" alt="锁屏界面" src="https://github.com/user-attachments/assets/89d2c00d-42a9-49e9-9d8c-0433d703d205" /></td>
+      <td align="center"><img width="200" alt="桌面界面" src="https://github.com/user-attachments/assets/a95c621e-42ec-4d20-a0b4-8fdaafa88de6" /></td>
+      <td align="center"><img width="200" alt="应用界面" src="https://github.com/user-attachments/assets/ce126ba1-0467-4b2f-8bb3-174f58c42049" /></td>
     </tr>
     <tr>
       <td align="center">锁屏界面</td>
@@ -45,9 +45,9 @@ OSUI（原名LVUI）是一个基于LVGL的模拟现代流行移动操作系统�
       <td align="center">应用界面</td>
     </tr>
     <tr>
-      <td align="center"><img width="200" alt="状态栏" src="https://github.com/user-attachments/assets/2ce98e76-dd0d-46cf-8643-798763cff213" /></td>
-      <td align="center"><img width="200" alt="导航栏" src="https://github.com/user-attachments/assets/f883c7a4-d39e-4264-88ab-dbe2bc8885af" /></td>
-      <td align="center"><img width="200" alt="主题设置" src="https://github.com/user-attachments/assets/cf15d4c1-5c50-4b44-96fb-a546184a2051" /></td>
+      <td align="center"><img width="200" alt="应用界面" src="https://github.com/user-attachments/assets/2ce98e76-dd0d-46cf-8643-798763cff213" /></td>
+      <td align="center"><img width="200" alt="桌面界面（黑暗）" src="https://github.com/user-attachments/assets/f883c7a4-d39e-4264-88ab-dbe2bc8885af" /></td>
+      <td align="center"><img width="200" alt="屏界面（黑暗）" src="https://github.com/user-attachments/assets/cf15d4c1-5c50-4b44-96fb-a546184a2051" /></td>
     </tr>
     <tr>
       <td align="center">应用界面</td>
