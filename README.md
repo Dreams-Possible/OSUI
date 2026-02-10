@@ -25,6 +25,14 @@ OSUI（原名LVUI）是一个基于LVGL的模拟现代流行移动操作系统�
 - **主题系统**：支持自定义主题和壁纸
 - **跨平台**：基于LVGL，支持多种显示设备和输入设备
 
+<img width="576" height="695" alt="2275f567126cfee19d5384635703ea70" src="https://github.com/user-attachments/assets/89d2c00d-42a9-49e9-9d8c-0433d703d205" />
+<img width="606" height="700" alt="b6495243ea2cba5ac0ed71096404c250_720" src="https://github.com/user-attachments/assets/a95c621e-42ec-4d20-a0b4-8fdaafa88de6" />
+<img width="578" height="708" alt="f851ba2f3fe9b8150787cf83b80d49d1" src="https://github.com/user-attachments/assets/ce126ba1-0467-4b2f-8bb3-174f58c42049" />
+<img width="609" height="690" alt="927e88e4cc9af3912a800e65460ceaae" src="https://github.com/user-attachments/assets/2ce98e76-dd0d-46cf-8643-798763cff213" />
+<img width="592" height="709" alt="800dba5a0a9cbc0ef32fb038da0e8e8e_720" src="https://github.com/user-attachments/assets/f883c7a4-d39e-4264-88ab-dbe2bc8885af" />
+<img width="603" height="684" alt="0a81279027f92c38883dc094f8b80055_720" src="https://github.com/user-attachments/assets/cf15d4c1-5c50-4b44-96fb-a546184a2051" />
+
+
 ## 📁 项目结构
 
 ```
