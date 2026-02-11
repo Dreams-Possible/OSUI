@@ -60,8 +60,8 @@ OSUI（原名LVUI）是一个基于LVGL的模拟现代流行移动操作系统�
       <td align="center"></td>
     </tr>
     <tr>
-      <td align="center">页动画效果1</td>
-      <td align="center">图动画效果2</td>
+      <td align="center">动画效果1</td>
+      <td align="center">动画效果2</td>
       <td align="center"></td>
     </tr>
   </table>
